@@ -42,7 +42,7 @@ The problem that I am trying to solve is the ability to easily make your own mem
     - Supertest
 
 ### Technical Documentation
-![](Capstone%20Diagram.png)
+![](CapstoneDiagram.png)
 
 ## Timeline
 ### Phase 0

@@ -10,6 +10,7 @@ dotenv.config()
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 app.use("/", health = require("./routes/health.js"))
 app.use("/", memes = require("./routes/memes.js"))
-
+app.use("/", bucket = require("./routes/bucket.js"))
+app.use("/", quotes = require("./routes/quotes.js"))
 
 module.exports = app

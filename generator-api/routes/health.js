@@ -1,5 +1,4 @@
 const express = require("express")
-const dotenv = require('dotenv')
 var app = express()
 const router = express.Router()
 

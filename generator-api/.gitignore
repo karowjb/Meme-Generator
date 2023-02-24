@@ -1,2 +1,5 @@
 node_modules/
 vars
+package-lock.json
+.env
+data/*

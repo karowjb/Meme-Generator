@@ -5,29 +5,40 @@ const path = require("path");
 const express = require("express");
 var app = express();
 const router = express.Router();
+const uploadImageToS3 = require("../utils/s3Upload");
 
 router.get("/bucket", (req, res) => {
+    // Configure the AWS SDK with your access key and secret access key
     AWS.config.update({
         accessKeyId: process.env.accessKeyId,
         secretAccessKey: process.env.accessSecret,
     });
-    var s3 = new AWS.S3();
-    var filePath = "./data/file.txt";
-    var params = {
-        Bucket: "capstone-memegenerator",
-        Body: fs.createReadStream(filePath),
-        Key: "folder/" + Date.now() + "_" + path.basename(filePath),
-    };
-    s3.upload(params, function (err, data) {
-        //handle error
+    // Create an S3 client object
+    const s3 = new AWS.S3();
+    // Set the name of the S3 bucket you want to access
+    const bucketName = "capstone-memegenerator";
+    // List the contents of the bucket
+    s3.listObjects({ Bucket: bucketName }, function (err, data) {
         if (err) {
-            console.log("Error", err);
-        }
-        //success
-        if (data) {
-            console.log("Uploaded in:", data.Location);
+            console.log(err, err.stack);
+            res.sendStatus(500);
+        } else {
+            console.log(`Contents of ${bucketName}:`);
+            data.Contents.forEach((item) => console.log(item.Key));
+            res.sendStatus(200);
         }
     });
-    res.send("Data sent to AWS");
+});
+
+router.post("/bucket", (req, res) => {
+    const bucketName = "your-bucket-name";
+    const key = "../images/kevin.jpg";
+    const imageFile = "thisisatest";
+
+    uploadImageToS3(bucketName, key, imageFile)
+        .then((data) => console.log("Upload successful:", data))
+        .catch((error) => console.error("Upload failed:", error));
+
+    res.sendStatus(200);
 });
 module.exports = router;

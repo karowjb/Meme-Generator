@@ -1,0 +1,78 @@
+import React, { useState, useRef } from "react";
+
+function CanvasImage() {
+    const [imageLoaded, setImageLoaded] = useState(false);
+    const [imageSrc, setImageSrc] = useState("");
+    const canvasRef = useRef(null);
+
+    const onInputChange = (event) => {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+            setImageLoaded(true);
+            setImageSrc(reader.result);
+            const canvas = canvasRef.current;
+            const ctx = canvas.getContext("2d");
+            const image = new Image();
+            image.src = reader.result;
+            image.onload = () => {
+                ctx.fillStyle = "black";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(image, 0, 0);
+            };
+        };
+    };
+
+    const onApiClick = async () => {
+        const response = await fetch("/api");
+        const data = await response.json();
+        setImageLoaded(true);
+        setImageSrc(data.base64);
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext("2d");
+        const image = new Image();
+        image.src = "data:image/png;base64," + data.base64;
+        image.onload = () => {
+            ctx.fillStyle = "black";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(image, 0, 0);
+        };
+    };
+
+    const onExportClick = () => {
+        const canvas = canvasRef.current;
+        const dataURL = canvas.toDataURL("image/png");
+        const link = document.createElement("a");
+        link.download = "canvas.png";
+        link.href = dataURL;
+        link.click();
+    };
+
+    return (
+        <div>
+            <canvas
+                ref={canvasRef}
+                width={500}
+                height={300}
+                style={{ border: "1px solid black" }}
+            />
+            <input type="file" onChange={onInputChange} />
+            <button onClick={onApiClick}>Choose from API</button>
+            {imageLoaded && (
+                <button onClick={onExportClick}>Export canvas as PNG</button>
+            )}
+        </div>
+    );
+}
+
+function App() {
+    return (
+        <div>
+            <h1>Canvas Example</h1>
+            <CanvasImage />
+        </div>
+    );
+}
+
+export default App;

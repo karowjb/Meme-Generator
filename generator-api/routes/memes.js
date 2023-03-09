@@ -34,12 +34,11 @@ router.get("/memes", async (req, res) => {
                     .then(async (rows) => {
                         let randVal = Math.floor(Math.random() * rows.length);
                         // console.log(rows); // Log the result rows to the console
-                        res.set("Access-Control-Allow-Origin", "*");
-                        // console.log(rows[randVal][Image])
-                        let test = await getBase64(rows[randVal]["image"]);
-                        // console.log(test);
-                        // res.send(rows[randVal]);
-                        res.send({ image: test });
+                        let response = await axios.post(
+                            "http://localhost:5555/bucket",
+                            (data = { name: `${rows[randVal]["name"]}` })
+                        );
+                        res.send({ image: response.data });
                         conn.release();
                     })
                     .catch((err) => {
@@ -96,5 +95,7 @@ router.post("/memes", async (req, res) => {
         throw err;
     }
 });
+// router.post("memes/image", (req,res)=>{
 
+// })
 module.exports = router;

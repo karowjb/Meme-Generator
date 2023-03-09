@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import "./App.css";
+import { Buffer } from "buffer";
 const axios = require("axios");
 function CanvasPage() {
     const [imageSrc, setImageSrc] = useState("");
@@ -40,22 +41,23 @@ function CanvasPage() {
     async function handleFetchImage() {
         const response = await fetch("/api2");
         const data = await response.json();
-        // console.log(data);
         console.log(data["image"]);
-
-        let img = new Image();
-        // let res = await axios.get(data["image"]);
-        // console.log(res);
-        // img.crossOrigin = "";
-        img.src = data["image"];
-
-        // localStorage.setItem("image", data["image"]);
-        // console.log(response.formData);
-        // setImageSrc(data["image"]);
-        // let test = localStorage.getItem("image");
-        setImageSrc(img.src);
-        // img.crossOrigin = null;
-        // console.log(img.crossOrigin);
+        await getBase64(data["image"]);
+        let test = localStorage.getItem("image");
+        setImageSrc(test);
+    }
+    async function getBase64(url) {
+        console.log("Converting image");
+        return axios
+            .get(url, {
+                responseType: "arraybuffer",
+            })
+            .then((response) => {
+                let img = Buffer.from(response.data, "binary").toString(
+                    "base64"
+                );
+                localStorage.setItem("image", img);
+            });
     }
     async function handleFetchText() {
         // new async function

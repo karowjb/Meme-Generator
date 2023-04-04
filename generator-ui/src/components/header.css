@@ -1,0 +1,25 @@
+.page-header{
+    background-color: #142d4c;
+    color:white;
+    height: 60px;
+    text-align: center;
+    margin-top: 0;
+    padding: 5px;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-size: 1.25em;
+}
+
+/* .first-color {
+    background: #ececec;
+}
+
+.second-color {
+    background: #9fd3c7;
+}
+
+.third-color {
+    background: #385170;
+}
+
+.fourth-color {
+    background: #142d4c; */

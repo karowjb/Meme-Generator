@@ -25,44 +25,12 @@ router.post("/bucket", async (req, res) => {
     console.log("Accessing bucket");
     const bucketName = "capstone-memegenerator";
     const objectKey = req.body["name"];
-    // const param = {
-    //     Bucket: bucketName,
-    // };
     const params = {
         Bucket: bucketName,
         Key: objectKey,
     };
-
-    // s3.listObjectsV2(param, function (err, data) {
-    //     if (err) {
-    //         console.log(err, err.stack);
-    //     } else {
-    //         console.log(data.Contents);
-    //     }
-    // });
-
     const url = s3.getSignedUrl("getObject", params);
-
-    // console.log(`This is the url: ${url}`);
     res.send(url);
-    // const response = await axios
-    //     .get(url, {
-    //         responseType: "arraybuffer", // Set the response type to arraybuffer to get the binary data
-    //     })
-    //     .then((response) => {
-    //         // Handle the response
-    //         const data = response.data; // The binary data of the object
-    //         let img = Buffer.from(response.data, "binary").toString("base64");
-    //         // console.log(img);
-    //         // res.setHeader("Content-Type", "img/png");
-    //         // localStorage.setItem("tester", img);
-    //         res.sendStatus(200);
-    //     })
-    //     .catch((error) => {
-    //         // Handle the error
-    //     });
-    // res.send(response);
-    // console.log(response);
 });
 
 router.get("/buckets", async (req, res) => {
@@ -85,7 +53,6 @@ router.get("/buckets", async (req, res) => {
     const params = {
         Bucket: bucketName,
     };
-    // const url = s3.getSignedUrl("getObject", params);
     s3.listObjectsV2(params, function (err, data) {
         if (err) {
             console.log(err, err.stack);
@@ -93,25 +60,6 @@ router.get("/buckets", async (req, res) => {
             console.log(data.Contents);
         }
     });
-    // console.log(url);
-    // const response = await axios
-    //     .get(url, {
-    //         responseType: "arraybuffer", // Set the response type to arraybuffer to get the binary data
-    //     })
-    //     .then((response) => {
-    //         // Handle the response
-    //         const data = response.data; // The binary data of the object
-    //         let img = Buffer.from(response.data, "binary").toString("base64");
-    //         // console.log(img);
-    //         // res.setHeader("Content-Type", "img/png");
-    //         // localStorage.setItem("tester", img);
-    //         res.sendStatus(200);
-    //     })
-    //     .catch((error) => {
-    //         // Handle the error
-    //     });
-    // // res.send(response);
-    // console.log(response);
 });
 
 module.exports = router;

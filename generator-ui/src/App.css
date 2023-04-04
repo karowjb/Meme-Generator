@@ -1,22 +1,26 @@
 body {
-  background-color: grey;
+  background-color: #545559;
+}
+.grid-container{
+  display: grid;
+  gap: 5px 5px;
+  grid-template-columns: 20% 60% 20%;
+  grid-template-rows: 1fr 1fr;
 }
 .input-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  margin-bottom: 5pxpx;
+  align-items: left;
+  font-size: 14px;
+  background-color: #385170;
 }
-
 .canvas-container {
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: #27272b;
 }
 .button-container {
-  position: absolute;
-  top: 50%;
-  right: 0;
   transform: translateY(-50%);
   display: flex;
   flex-direction: column;
@@ -24,14 +28,15 @@ body {
 .position-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  margin-left: 20px;
+  align-items: center;
+  margin-left: 5px;
   width: 200px;
 }
-
 canvas {
+  grid-column-start: 2;
+  grid-column-end: 2;
   display: block;
   margin: 0 auto;
   margin-top: 0px;
+  background-color: black;
 }

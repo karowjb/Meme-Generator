@@ -46,6 +46,35 @@ router.get("/quotes", async (req, res) => {
         throw err;
     }
 });
+router.get("/quotesall", async (req, res) => {
+    try {
+        pool.getConnection()
+            .then((conn) => {
+                console.log(
+                    "Connected to MariaDB database with threadId: " +
+                        conn.threadId
+                );
+                conn.query("SELECT * FROM quotes")
+                    .then((rows) => {
+                        res.send(rows);
+                        conn.release();
+                    })
+                    .catch((err) => {
+                        console.error(
+                            "Error executing SELECT statement: " + err.stack
+                        );
+                        conn.release();
+                    });
+            })
+            .catch((err) => {
+                console.error(
+                    "Error connecting to MariaDB database: " + err.stack
+                );
+            });
+    } catch (err) {
+        throw err;
+    }
+});
 
 router.post("/quotes", async (req, res) => {
     // try {

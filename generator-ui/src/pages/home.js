@@ -1,35 +1,22 @@
-import React, { useRef, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import AllMemes from "./AllMemes.js";
+import Header from "../components/Header.js";
+import App from "../App.js";
+import AllQuotes from "./AllQuotes.js";
+import NavBar from "../components/NavBar.js";
 
-function Canvas() {
-  const canvasRef = useRef(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    
-    // Draw a rectangle on the canvas
-    ctx.fillStyle = 'blue';
-    ctx.fillRect(10, 10, 50, 50);
-    
-    // Draw a circle on the canvas
-    ctx.beginPath();
-    ctx.arc(100, 75, 50, 0, 2 * Math.PI);
-    ctx.stroke();
-  }, []);
-
-  return (
-    <canvas ref={canvasRef} width={300} height={200} />
-  );
+function Home() {
+    return (
+        <Router>
+            <Header />
+            <NavBar></NavBar>
+            <Routes>
+                <Route exact path="/" element={<App />} />
+                <Route exact path="/AllMemes" element={<AllMemes />} />
+                <Route exact path="/AllQuotes" element={<AllQuotes />} />
+            </Routes>
+        </Router>
+    );
 }
 
-function HomePage() {
-  return (
-    <div>
-      <h1>Welcome to My Website</h1>
-      <p>Here's an example of an embedded canvas:</p>
-      <Canvas />
-    </div>
-  );
-}
-
-export default HomePage;
+export default Home;

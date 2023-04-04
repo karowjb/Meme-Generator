@@ -22,4 +22,34 @@ module.exports = function (app) {
             },
         })
     );
+    app.use(
+        "/api3",
+        createProxyMiddleware({
+            target: "http://localhost:5555",
+            changeOrigin: true,
+            pathRewrite: {
+                "^/api3": "quotesall",
+            },
+        })
+    );
+    app.use(
+        "/api4",
+        createProxyMiddleware({
+            target: "http://localhost:5555",
+            changeOrigin: true,
+            pathRewrite: {
+                "^/api4": "memesall",
+            },
+        })
+    );
+    app.use(
+        "/api5",
+        createProxyMiddleware({
+            target: "http://localhost:5555",
+            changeOrigin: true,
+            pathRewrite: {
+                "^/api5": "bucket",
+            },
+        })
+    );
 };

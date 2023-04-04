@@ -2,9 +2,14 @@ import React, { useState, useRef } from "react";
 import "./App.css";
 import { Buffer } from "buffer";
 const axios = require("axios");
+const width = 600;
+const height = 600;
+let FileWhere = true;
+
 function CanvasPage() {
     const [imageSrc, setImageSrc] = useState("");
     const [text, setText] = useState("");
+    const [downloadName, setDownload] = useState("");
     const [textPosition, setTextPosition] = useState({ x: 10, y: 50 });
     const [textColor, setTextColor] = useState("#ffffff");
     const [textSize, setTextSize] = useState(20);
@@ -13,7 +18,11 @@ function CanvasPage() {
     function handleImageChange(event) {
         const file = event.target.files[0];
         const reader = new FileReader();
+        console.log(file);
         reader.onload = () => {
+            FileWhere = false;
+            console.log(FileWhere);
+            console.log(reader.result);
             setImageSrc(reader.result);
         };
         reader.readAsDataURL(file);
@@ -23,6 +32,9 @@ function CanvasPage() {
         setText(event.target.value);
     }
 
+    function handleDownloadChange(event) {
+        setDownload(event.target.value);
+    }
     function handleTextPositionChange(event) {
         setTextPosition({
             ...textPosition,
@@ -44,6 +56,8 @@ function CanvasPage() {
         console.log(data["image"]);
         await getBase64(data["image"]);
         let test = localStorage.getItem("image");
+        FileWhere = true;
+        console.log(FileWhere);
         setImageSrc(test);
     }
     async function getBase64(url) {
@@ -63,18 +77,16 @@ function CanvasPage() {
         // new async function
         const response = await fetch("/api1");
         const data = await response.json();
-        // console.log();
         console.log(data["quoteContent"]);
         setText(data["quoteContent"]);
     }
 
     function handleExportClick() {
         const canvas = canvasRef.current;
-        // document.crossOrigin = "";
         const link = document.createElement("a");
         console.log("1");
         console.log(link.origin);
-        link.download = "canvas.png";
+        link.download = `${downloadName}.png`;
         console.log("2");
         link.href = canvas.toDataURL();
         console.log("3");
@@ -85,7 +97,6 @@ function CanvasPage() {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext("2d");
         const image = new Image();
-        // image.crossOrigin = "anonymous";
         image.onload = () => {
             ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
             ctx.font = `${textSize}px Arial`;
@@ -93,33 +104,32 @@ function CanvasPage() {
             ctx.fillText(text, textPosition.x, textPosition.y);
         };
         console.log(imageSrc);
-        image.src = `data:image/png;base64,${imageSrc}`;
-        // image.crossOrigin = "anonymous"; // This enables CORS
-        // image.onload = function (event) {
-        //     try {
-        //         ctx.drawImage(image, 0, 0, 200, 200);
-        //         // button.download = "cat.png";
-        //         // button.href = canvas.canvas.toDataURL();
-        //     } catch (e) {
-        //         alert(e);
-        //     }
-        // };
-
-        // image.src = "https://i.chzbgr.com/maxW500/1691290368/h07F7F378/";
+        console.log(`File location: ${FileWhere}`);
+        if (FileWhere === true) {
+            image.src = `data:image/png;base64,${imageSrc}`;
+        } else if (FileWhere === false) {
+            image.src = imageSrc;
+        }
     }
 
     return (
-        <div className="container">
+        <div className="grid-container">
             <div className="input-container">
+                <br />
+                <button onClick={handleFetchImage}>Use Template Image</button>
+                <br />
+                <button onClick={handleFetchText}>Use Template Text</button>
+                <br />
+                <textarea
+                    onChange={handleTextChange}
+                    placeholder="Insert meme here..."
+                ></textarea>
+                <h3>Insert your own meme</h3>
                 <input type="file" onChange={handleImageChange} />
                 <br />
-                <button onClick={handleFetchImage}>Fetch image</button>
-                <br />
-                <br />
-                <button onClick={handleFetchText}>Fetch text</button>
-                <br />
-                <textarea onChange={handleTextChange} />
-                <br />
+            </div>
+            <div className="canvas-container">
+                <canvas ref={canvasRef} width={width} height={height} />
             </div>
             <div className="position-container">
                 <label>
@@ -127,7 +137,7 @@ function CanvasPage() {
                     <input
                         type="range"
                         min="0"
-                        max="400"
+                        max={width}
                         step="1"
                         name="x"
                         value={textPosition.x}
@@ -140,7 +150,7 @@ function CanvasPage() {
                     <input
                         type="range"
                         min="0"
-                        max="400"
+                        max={height}
                         step="1"
                         name="y"
                         value={textPosition.y}
@@ -160,6 +170,7 @@ function CanvasPage() {
                     />
                 </label>
                 <br />
+                <label>Text Color: {textColor}</label>
                 <input
                     type="color"
                     value={textColor}
@@ -168,13 +179,16 @@ function CanvasPage() {
             </div>
             <div className="button-container">
                 <br />
-                <button onClick={drawCanvas}>Draw canvas</button>
-                <button onClick={handleExportClick}>Export canvas</button>
-                <br />
-            </div>
+                <button onClick={drawCanvas}>Draw Meme</button>
+                <input
+                    type="name"
+                    value={downloadName}
+                    onChange={handleDownloadChange}
+                    placeholder="Enter filename here..."
+                ></input>
+                <button onClick={handleExportClick}>Export Meme</button>
 
-            <div className="canvas-container">
-                <canvas ref={canvasRef} width="400" height="400" />
+                <br />
             </div>
         </div>
     );

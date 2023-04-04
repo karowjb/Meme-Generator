@@ -1,7 +1,10 @@
 import React, { useState, useRef } from "react";
 import "./App.css";
 import { Buffer } from "buffer";
-const axios = require("axios");
+import axios from "axios";
+
+// const axios = require("axios");
+// const axios = require("axios").default;
 const width = 600;
 const height = 600;
 let FileWhere = true;
@@ -9,7 +12,7 @@ let FileWhere = true;
 function CanvasPage() {
     const [imageSrc, setImageSrc] = useState("");
     const [text, setText] = useState("");
-    const [downloadName, setDownload] = useState("");
+    let [downloadName, setDownload] = useState("");
     const [textPosition, setTextPosition] = useState({ x: 10, y: 50 });
     const [textColor, setTextColor] = useState("#ffffff");
     const [textSize, setTextSize] = useState(20);
@@ -77,20 +80,23 @@ function CanvasPage() {
         // new async function
         const response = await fetch("/api1");
         const data = await response.json();
-        console.log(data["quoteContent"]);
+        // console.log(data["quoteContent"]);
         setText(data["quoteContent"]);
     }
 
     function handleExportClick() {
         const canvas = canvasRef.current;
         const link = document.createElement("a");
-        console.log("1");
-        console.log(link.origin);
-        link.download = `${downloadName}.png`;
-        console.log("2");
-        link.href = canvas.toDataURL();
-        console.log("3");
-        link.click();
+        if (downloadName.trim().length !== 0) {
+            link.download = `${downloadName}.png`;
+            link.href = canvas.toDataURL();
+            link.click();
+        } else {
+            downloadName = "result";
+            link.download = `${downloadName}.png`;
+            link.href = canvas.toDataURL();
+            link.click();
+        }
     }
 
     function drawCanvas() {
@@ -103,7 +109,6 @@ function CanvasPage() {
             ctx.fillStyle = textColor;
             ctx.fillText(text, textPosition.x, textPosition.y);
         };
-        console.log(imageSrc);
         console.log(`File location: ${FileWhere}`);
         if (FileWhere === true) {
             image.src = `data:image/png;base64,${imageSrc}`;

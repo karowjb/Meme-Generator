@@ -1,16 +1,12 @@
 const express = require("express");
-const dotenv = require("dotenv");
 const mariadb = require("mariadb");
-// const Math = require("math");
-// const database = require("../database.js");
 
-var app = express();
 const router = express.Router();
 const pool = mariadb.createPool({
-    host: "localhost", // Replace with your MariaDB server host
+    host: process.env.HOST, // Replace with your MariaDB server host
     user: "root", // Replace with your MariaDB username
-    password: "interstellar", // Replace with your MariaDB password
-    database: "memegen", // Replace with your MariaDB database name
+    password: process.env.PASSWORD, // Replace with your MariaDB password
+    database: process.env.DATABASE, // Replace with your MariaDB database name
     connectionLimit: 5, // Replace with the maximum number of connections
 });
 
@@ -74,19 +70,6 @@ router.get("/quotesall", async (req, res) => {
     } catch (err) {
         throw err;
     }
-});
-
-router.post("/quotes", async (req, res) => {
-    // try {
-    //     let input = req.body;
-    //     const result = await database.pool.query(
-    //         `insert into quotes (Name, Category) values ('${input.name}', '${input.category}')`
-    //     );
-    //     let msg = `Affected rows: ${result.affectedRows}`;
-    //     res.send(msg);
-    // } catch (err) {
-    //     throw err;
-    // }
 });
 
 module.exports = router;

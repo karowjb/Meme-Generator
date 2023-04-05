@@ -1,29 +1,23 @@
-// const dotenv = require("dotenv");
 const AWS = require("aws-sdk");
-const fs = require("fs");
-const path = require("path");
 const express = require("express");
-var app = express();
 const router = express.Router();
-const uploadImageToS3 = require("../utils/s3Upload");
-const { default: axios } = require("axios");
 
 router.post("/bucket", async (req, res) => {
     // Configure the AWS SDK with your access key and secret access key
     AWS.config.update({
         accessKeyId: process.env.ACCESSKEYID,
         secretAccessKey: process.env.ACCESSSECRET,
-        region: "us-east-1",
+        region: process.env.AWSREGION,
     });
     // Create an S3 client object
     const s3 = new AWS.S3({
         encryption: {
-            S3ManagedEncryption: "AES256",
+            S3ManagedEncryption: process.env.ENCRYPTION,
         },
     });
     // Set the name of the S3 bucket you want to access
     console.log("Accessing bucket");
-    const bucketName = "capstone-memegenerator";
+    const bucketName = process.env.S3BUCKETNAME;
     const objectKey = req.body["name"];
     const params = {
         Bucket: bucketName,
@@ -38,17 +32,17 @@ router.get("/buckets", async (req, res) => {
     AWS.config.update({
         accessKeyId: process.env.ACCESSKEYID,
         secretAccessKey: process.env.ACCESSSECRET,
-        region: "us-east-1",
+        region: process.env.AWSREGION,
     });
     // Create an S3 client object
     const s3 = new AWS.S3({
         encryption: {
-            S3ManagedEncryption: "AES256",
+            S3ManagedEncryption: process.env.ENCRYPTION,
         },
     });
     // Set the name of the S3 bucket you want to access
     console.log("Accessing bucket");
-    const bucketName = "capstone-memegenerator";
+    const bucketName = process.env.S3BUCKETNAME;
 
     const params = {
         Bucket: bucketName,

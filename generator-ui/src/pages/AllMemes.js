@@ -17,6 +17,7 @@ const AllMemes = () => {
                 "/api5",
                 (data = { name: `${memes[m]["name"]}` })
             );
+            console.log(data);
             arr.push({ url: res.data });
         }
         setImageArray(arr);
@@ -24,7 +25,7 @@ const AllMemes = () => {
 
     return (
         <div>
-            <div className="meme-card-grid">
+            <div className="meme-card-grid" onLoad={load()}>
                 {imageArray.map((meme, index) => (
                     <div key={index} className="meme-card">
                         <div className="meme-card-body">

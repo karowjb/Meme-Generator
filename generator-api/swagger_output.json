@@ -6,7 +6,7 @@
     "descripton": "Documentation for the meme generator",
     "description": ""
   },
-  "host": "localhost:3000",
+  "host": "localhost:5555",
   "basePath": "/",
   "schemes": [
     "http",
@@ -19,16 +19,7 @@
     "application/json"
   ],
   "paths": {
-    "/memes": {
-      "get": {
-        "description": "",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
+    "/bucket": {
       "post": {
         "description": "",
         "parameters": [],
@@ -39,7 +30,58 @@
         }
       }
     },
+    "/buckets": {
+      "get": {
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
     "/health": {
+      "get": {
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/memes": {
+      "get": {
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/memesall": {
+      "get": {
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/quotes": {
+      "get": {
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/quotesall": {
       "get": {
         "description": "",
         "parameters": [],

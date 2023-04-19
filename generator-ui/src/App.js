@@ -3,8 +3,6 @@ import "./App.css";
 import { Buffer } from "buffer";
 import axios from "axios";
 
-// const axios = require("axios");
-// const axios = require("axios").default;
 const width = 600;
 const height = 600;
 let FileWhere = true;
@@ -58,14 +56,15 @@ function CanvasPage() {
         const data = await response.json();
         console.log(data["image"]);
         await getBase64(data["image"]);
-        let test = localStorage.getItem("image");
+        let test = await localStorage.getItem("image");
         FileWhere = true;
         console.log(FileWhere);
-        setImageSrc(test);
+        await setImageSrc(test);
+        await drawCanvas();
     }
     async function getBase64(url) {
         console.log("Converting image");
-        return axios
+        return await axios
             .get(url, {
                 responseType: "arraybuffer",
             })
@@ -100,6 +99,7 @@ function CanvasPage() {
     }
 
     function drawCanvas() {
+        console.log("Drawing");
         const canvas = canvasRef.current;
         const ctx = canvas.getContext("2d");
         const image = new Image();

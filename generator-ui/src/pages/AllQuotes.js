@@ -12,7 +12,7 @@ function AllQuotes() {
 
     return (
         <div>
-            <div className="card-grid">
+            <div className="card-grid" onLoad={load()}>
                 {quotes.map((quote, index) => (
                     <div key={index} className="card">
                         <div className="card-body">

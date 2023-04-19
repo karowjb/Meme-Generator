@@ -1,18 +1,11 @@
 const express = require("express");
-const mariadb = require("mariadb");
 const { default: axios } = require("axios");
+const dbConn = require("../dbconnect.js");
 const router = express.Router();
 
-const pool = mariadb.createPool({
-    host: process.env.HOST, // Replace with your MariaDB server host
-    user: "root", // Replace with your MariaDB username
-    password: process.env.PASSWORD, // Replace with your MariaDB password
-    database: process.env.DATABASE, // Replace with your MariaDB database name
-    connectionLimit: 5, // Replace with the maximum number of connections
-});
 router.get("/memes", async (req, res) => {
     try {
-        pool.getConnection()
+        dbConn
             .then((conn) => {
                 console.log(
                     "Connected to MariaDB database with threadId: " +
@@ -25,6 +18,7 @@ router.get("/memes", async (req, res) => {
                             "http://localhost:5555/bucket",
                             (data = { name: `${rows[randVal]["name"]}` })
                         );
+                        console.log(response);
                         res.send({ image: response.data });
                         conn.release();
                     })
@@ -46,7 +40,7 @@ router.get("/memes", async (req, res) => {
 });
 router.get("/memesall", async (req, res) => {
     try {
-        pool.getConnection()
+        dbConn
             .then((conn) => {
                 console.log(
                     "Connected to MariaDB database with threadId: " +

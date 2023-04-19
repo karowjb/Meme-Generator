@@ -1,18 +1,11 @@
 const express = require("express");
-const mariadb = require("mariadb");
+const dbConn = require("../dbconnect.js");
 
 const router = express.Router();
-const pool = mariadb.createPool({
-    host: process.env.HOST, // Replace with your MariaDB server host
-    user: "root", // Replace with your MariaDB username
-    password: process.env.PASSWORD, // Replace with your MariaDB password
-    database: process.env.DATABASE, // Replace with your MariaDB database name
-    connectionLimit: 5, // Replace with the maximum number of connections
-});
 
 router.get("/quotes", async (req, res) => {
     try {
-        pool.getConnection()
+        dbConn
             .then((conn) => {
                 console.log(
                     "Connected to MariaDB database with threadId: " +
@@ -44,7 +37,7 @@ router.get("/quotes", async (req, res) => {
 });
 router.get("/quotesall", async (req, res) => {
     try {
-        pool.getConnection()
+        dbConn
             .then((conn) => {
                 console.log(
                     "Connected to MariaDB database with threadId: " +

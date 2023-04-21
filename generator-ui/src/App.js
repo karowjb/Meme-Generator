@@ -12,7 +12,7 @@ function CanvasPage() {
     const [text, setText] = useState("");
     let [downloadName, setDownload] = useState("");
     const [textPosition, setTextPosition] = useState({ x: 10, y: 50 });
-    const [textColor, setTextColor] = useState("#ffffff");
+    const [textColor, setTextColor] = useState("#cc0000");
     const [textSize, setTextSize] = useState(20);
     const canvasRef = useRef(null);
 
@@ -54,11 +54,9 @@ function CanvasPage() {
     async function handleFetchImage() {
         const response = await fetch("/api2");
         const data = await response.json();
-        console.log(data["image"]);
         await getBase64(data["image"]);
         let test = await localStorage.getItem("image");
         FileWhere = true;
-        console.log(FileWhere);
         await setImageSrc(test);
         await drawCanvas();
     }
@@ -79,7 +77,6 @@ function CanvasPage() {
         // new async function
         const response = await fetch("/api1");
         const data = await response.json();
-        // console.log(data["quoteContent"]);
         setText(data["quoteContent"]);
     }
 

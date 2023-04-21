@@ -1,27 +1,86 @@
+const axios = require("axios");
 const supertest = require("supertest");
-const express = require("express");
 const app = require("../server");
-const { default: axios } = require("axios");
-jest.mock("axios");
-
+// let dbConn = require("../dbconnect");
 request = supertest(app);
+jest.mock("axios");
+let dbConn = require("../dbconnect");
 
-it("Gets the memes endpoint", async () => {
-    // Sends GET Request to /test endpoint
-    axios.post.mockResolvedValue({
-        data: "https://capstone-memegenerator.s3.amazonaws.com/kevin.jpg?AWSAccessKeyId=AKIAVYN2RNW3VXRHJ7OL&Expires=1681918669&Signature=TDcIZfCefjSwnxPXiTmTAX%2BWBjw%3D",
-    });
-    const res = await request.get("/memes");
-    expect(res.status).toBe(200);
-    expect(res.text).toBe(
-        '{"image":"https://capstone-memegenerator.s3.amazonaws.com/kevin.jpg?AWSAccessKeyId=AKIAVYN2RNW3VXRHJ7OL&Expires=1681918669&Signature=TDcIZfCefjSwnxPXiTmTAX%2BWBjw%3D"}'
-    );
+// Set up a mock pool for testing
+describe("GET /memes", () => {
+    it("should return a random meme image", async () => {
+        const mockMeme = {
+            name: "Mock Meme",
+            url: "http://example.com/mock-meme.jpg",
+        };
+        const mockResponse = { data: mockMeme };
+        console.log("In spec-memes");
+        // Mock the response from the /bucket endpoint
+        axios.post.mockResolvedValue(mockResponse);
+
+        // Mock the query result from the database
+        dbConn = jest.fn().mockResolvedValue({
+            then: jest.fn().mockResolvedValue({}),
+            conn: jest.fn().mockResolvedValue({
+                query: jest.fn().mockResolvedValue([
+                    {
+                        name: "Mock Meme 1",
+                        url: "http://example.com/mock-meme-1.jpg",
+                    },
+                    {
+                        name: "Mock Meme 2",
+                        url: "http://example.com/mock-meme-2.jpg",
+                    },
+                ]),
+            }),
+
+            release: jest.fn(),
+        });
+        const response = await request.get("/memes");
+
+        // Expect the response to have a 200 status code
+        expect(response.status).toBe(200);
+        // Expect the response body to have an image property with the mock meme data
+        expect(response.body).toHaveProperty("image", mockMeme);
+    }, 10000);
 });
-it("Gets the memes endpoint", async () => {
-    // Sends GET Request to /test endpoint
-    const res = await request.get("/memesall");
-    expect(res.status).toBe(200);
-    // expect(res.text).toBe(
-    //     '[{"memeId":1,"name":"test.png","memeType":0,"image":"https://capstone-memegenerator.s3.amazonaws.com/test.png?AWSAccessKeyId=AKIAVYN2RNW3VXRHJ7OL&Expires=1678322278&Signature=lCiMT7C2ead4zqbRaHjhKA5Me7E%3D"},{"memeId":2,"name":"danger.jpg","memeType":0,"image":"https://capstone-memegenerator.s3.amazonaws.com/meme.png?AWSAccessKeyId=AKIAVYN2RNW3VXRHJ7OL&Expires=1678321892&Signature=99BBtfUkeSBn1LwVjjZHUOm6teY%3D"},{"memeId":3,"name":"kevin.jpg","memeType":0,"image":"https://capstone-memegenerator.s3.amazonaws.com/test.png?AWSAccessKeyId=AKIAVYN2RNW3VXRHJ7OL&Expires=1678322278&Signature=lCiMT7C2ead4zqbRaHjhKA5Me7E%3D"},{"memeId":4,"name":"meme.png","memeType":0,"image":"https://capstone-memegenerator.s3.amazonaws.com/meme.png?AWSAccessKeyId=AKIAVYN2RNW3VXRHJ7OL&Expires=1678321892&Signature=99BBtfUkeSBn1LwVjjZHUOm6teY%3D"},{"memeId":5,"name":"test.png","memeType":0,"image":"https://capstone-memegenerator.s3.amazonaws.com/test.png?AWSAccessKeyId=AKIAVYN2RNW3VXRHJ7OL&Expires=1678322278&Signature=lCiMT7C2ead4zqbRaHjhKA5Me7E%3D"},{"memeId":6,"name":"meme.png","memeType":0,"image":"https://capstone-memegenerator.s3.amazonaws.com/meme.png?AWSAccessKeyId=AKIAVYN2RNW3VXRHJ7OL&Expires=1678321892&Signature=99BBtfUkeSBn1LwVjjZHUOm6teY%3D"}]'
-    // );
+
+describe("GET /memesall", () => {
+    it("should return all memes", async () => {
+        const mockMemes = [
+            { name: "Mock Meme 1", url: "http://example.com/mock-meme-1.jpg" },
+            { name: "Mock Meme 2", url: "http://example.com/mock-meme-2.jpg" },
+        ];
+        console.log("In spec-memesall");
+        // Mock the response from the /bucket endpoint
+
+        // Mock the query result from the database
+        dbConn = jest.fn().mockResolvedValue({
+            // conn: jest.fn().mockResolvedValue("bad"),
+            // then: jest.fn().mockResolvedValue("bad"),
+            // query: jest.fn().mockResolvedValue("bad"),
+            // then: jest.fn().mockResolvedValue({
+            //     conn: jest.fn().mockResolvedValue({
+            //         query: jest.fn().mockResolvedValue([
+            //             {
+            //                 name: "Mock Meme 1",
+            //                 url: "http://example.com/mock-meme-1.jpg",
+            //             },
+            //             {
+            //                 name: "Mock Meme 2",
+            //                 url: "http://example.com/mock-meme-2.jpg",
+            //             },
+            //         ]),
+            //     }),
+            // }),
+            // release: jest.fn(),
+        });
+
+        const response = await request.get("/memesall");
+
+        // Expect the response to have a 200 status code
+        expect(response.status).toBe(200);
+        // Expect the response body to have an images property with an array of mock memes
+        // expect(response.body).toHaveProperty("images", mockMemes);
+    });
 });

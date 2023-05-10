@@ -16,7 +16,6 @@ router.post("/bucket", async (req, res) => {
         },
     });
     // Set the name of the S3 bucket you want to access
-    console.log("Accessing bucket");
     const bucketName = process.env.S3BUCKETNAME;
     const objectKey = req.body["name"];
     const params = {
@@ -41,7 +40,6 @@ router.get("/buckets", async (req, res) => {
         },
     });
     // Set the name of the S3 bucket you want to access
-    console.log("Accessing bucket");
     const bucketName = process.env.S3BUCKETNAME;
 
     const params = {

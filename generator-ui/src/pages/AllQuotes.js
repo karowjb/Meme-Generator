@@ -1,18 +1,22 @@
 import React, { useState } from "react";
 import "./AllQuotes.css";
+let loader = false;
+
 function AllQuotes() {
     const [quotes, setQuotes] = useState([]);
 
-    async function load() {
-        let response = await fetch("/api3");
-        let text = await response.text();
-        let quotes = JSON.parse(text);
-        setQuotes(quotes);
-    }
+    const load = async () => {
+        if (loader === false) {
+            let response = await fetch("/quotesall");
+            let text = await response.text();
+            let quotes = JSON.parse(text);
+            setQuotes(quotes);
+        }
+    };
 
     return (
         <div>
-            <div className="card-grid" onLoad={load()}>
+            <div className="card-grid">
                 {quotes.map((quote, index) => (
                     <div key={index} className="card">
                         <div className="card-body">

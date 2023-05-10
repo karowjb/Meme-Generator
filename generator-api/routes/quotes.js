@@ -10,9 +10,7 @@ router.get("/quotes", async (req, res) => {
                 "Connected to MariaDB database with threadId: " + conn.threadId
             );
             conn.query("SELECT * FROM quotes").then((rows) => {
-                console.log(`Length: ${rows.length}`);
                 let randVal = Math.floor(Math.random() * rows.length);
-                console.log(rows); // Log the result rows to the console
                 res.send(rows[randVal]);
                 conn.release();
             });

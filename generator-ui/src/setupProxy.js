@@ -2,53 +2,53 @@ const { createProxyMiddleware } = require("http-proxy-middleware");
 
 module.exports = function (app) {
     app.use(
-        "/api1",
+        "/quotes",
         createProxyMiddleware({
             target: "http://localhost:5555",
             changeOrigin: true,
             pathRewrite: {
-                "^/api1": "quotes",
+                "^/quotes": "quotes",
             },
         })
     );
 
     app.use(
-        "/api2",
+        "/memes",
         createProxyMiddleware({
             target: "http://localhost:5555",
             changeOrigin: true,
             pathRewrite: {
-                "^/api2": "memes",
+                "^/memes": "memes",
             },
         })
     );
     app.use(
-        "/api3",
+        "/quotesall",
         createProxyMiddleware({
             target: "http://localhost:5555",
             changeOrigin: true,
             pathRewrite: {
-                "^/api3": "quotesall",
+                "^/quotesall": "quotesall",
             },
         })
     );
     app.use(
-        "/api4",
+        "/memesall",
         createProxyMiddleware({
             target: "http://localhost:5555",
             changeOrigin: true,
             pathRewrite: {
-                "^/api4": "memesall",
+                "^/memesall": "memesall",
             },
         })
     );
     app.use(
-        "/api5",
+        "/bucket",
         createProxyMiddleware({
             target: "http://localhost:5555",
             changeOrigin: true,
             pathRewrite: {
-                "^/api5": "bucket",
+                "^/bucket": "bucket",
             },
         })
     );

@@ -11,57 +11,63 @@ function CanvasPage() {
     const [imageSrc, setImageSrc] = useState("");
     const [text, setText] = useState("");
     let [downloadName, setDownload] = useState("");
-    const [textPosition, setTextPosition] = useState({ x: 10, y: 50 });
+    const [textPosition, setTextPosition] = useState({ x: 0, y: 20 });
     const [textColor, setTextColor] = useState("#cc0000");
     const [textSize, setTextSize] = useState(20);
     const canvasRef = useRef(null);
+    const [fontFamily, setFontFamily] = useState("Arial");
+    const [textHeight, setTextHeight] = useState("20");
 
     function handleImageChange(event) {
         const file = event.target.files[0];
         const reader = new FileReader();
-        console.log(file);
         reader.onload = () => {
             FileWhere = false;
-            console.log(FileWhere);
-            console.log(reader.result);
             setImageSrc(reader.result);
         };
         reader.readAsDataURL(file);
     }
-
     function handleTextChange(event) {
         setText(event.target.value);
+        drawCanvas();
     }
-
     function handleDownloadChange(event) {
         setDownload(event.target.value);
+        drawCanvas();
     }
     function handleTextPositionChange(event) {
         setTextPosition({
             ...textPosition,
             [event.target.name]: event.target.value,
         });
+        drawCanvas();
     }
-
     function handleTextColorChange(event) {
         setTextColor(event.target.value);
+        drawCanvas();
     }
-
+    function handleFontFamilyChange(event) {
+        setFontFamily(event.target.value);
+        drawCanvas();
+    }
+    function handleTextHeight(event) {
+        setTextHeight(event.target.value);
+        drawCanvas();
+    }
     function handleTextSizeChange(event) {
         setTextSize(parseInt(event.target.value));
+        drawCanvas();
     }
-
     async function handleFetchImage() {
-        const response = await fetch("/api2");
+        const response = await fetch("/memes");
         const data = await response.json();
         await getBase64(data["image"]);
         let test = await localStorage.getItem("image");
         FileWhere = true;
         await setImageSrc(test);
-        await drawCanvas();
     }
+
     async function getBase64(url) {
-        console.log("Converting image");
         return await axios
             .get(url, {
                 responseType: "arraybuffer",
@@ -73,11 +79,13 @@ function CanvasPage() {
                 localStorage.setItem("image", img);
             });
     }
+
     async function handleFetchText() {
-        // new async function
-        const response = await fetch("/api1");
+        textPosition.y = 20;
+        const response = await fetch("/quotes");
         const data = await response.json();
-        setText(data["quoteContent"]);
+        let quote = data["quoteContent"];
+        setText(quote);
     }
 
     function handleExportClick() {
@@ -95,18 +103,37 @@ function CanvasPage() {
         }
     }
 
+    function renderWordBreak(ctx) {
+        let words = text.split(" ");
+        let newString = "";
+        let currentLineLength = 0;
+        let pos = Number(textHeight);
+        for (let i = 0; i < words.length; i++) {
+            if (currentLineLength >= 5) {
+                newString += words[i] + " ";
+                ctx.fillText(newString, textPosition.x, pos);
+                newString = "";
+                currentLineLength = 0;
+                pos += textSize;
+            } else {
+                newString += words[i] + " ";
+                currentLineLength += 1;
+            }
+        }
+        ctx.fillText(newString, textPosition.x, pos);
+        pos = Number(textHeight);
+    }
+
     function drawCanvas() {
-        console.log("Drawing");
         const canvas = canvasRef.current;
         const ctx = canvas.getContext("2d");
         const image = new Image();
         image.onload = () => {
             ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-            ctx.font = `${textSize}px Arial`;
+            ctx.font = `${textSize}px ${fontFamily}`;
             ctx.fillStyle = textColor;
-            ctx.fillText(text, textPosition.x, textPosition.y);
+            renderWordBreak(ctx);
         };
-        console.log(`File location: ${FileWhere}`);
         if (FileWhere === true) {
             image.src = `data:image/png;base64,${imageSrc}`;
         } else if (FileWhere === false) {
@@ -133,31 +160,20 @@ function CanvasPage() {
             <div className="canvas-container">
                 <canvas ref={canvasRef} width={width} height={height} />
             </div>
+
             <div className="position-container">
                 <label>
-                    X position: {textPosition.x}
-                    <input
-                        type="range"
-                        min="0"
-                        max={width}
-                        step="1"
-                        name="x"
-                        value={textPosition.x}
-                        onChange={handleTextPositionChange}
-                    />
-                </label>
-                <br />
-                <label>
-                    Y position: {textPosition.y}
-                    <input
-                        type="range"
-                        min="0"
-                        max={height}
-                        step="1"
-                        name="y"
-                        value={textPosition.y}
-                        onChange={handleTextPositionChange}
-                    />
+                    Font family:
+                    <select
+                        value={fontFamily}
+                        onChange={handleFontFamilyChange}
+                    >
+                        <option value="Arial">Arial</option>
+                        <option value="Verdana">Verdana</option>
+                        <option value="Times New Roman">Times New Roman</option>
+                        <option value="Georgia">Georgia</option>
+                        <option value="Courier New">Courier New</option>
+                    </select>
                 </label>
                 <br />
                 <label>
@@ -170,6 +186,29 @@ function CanvasPage() {
                         value={textSize}
                         onChange={handleTextSizeChange}
                     />
+                </label>
+                <br />
+                <label>
+                    X position: {textPosition.x}
+                    <input
+                        type="range"
+                        min="0"
+                        max={width / 2}
+                        step="1"
+                        name="x"
+                        value={textPosition.x}
+                        onChange={handleTextPositionChange}
+                    />
+                </label>
+                <br />
+                <label>
+                    Y position:
+                    <br></br>
+                    <select value={textHeight} onChange={handleTextHeight}>
+                        <option value="20">Top</option>
+                        <option value="275">Middle</option>
+                        <option value="500">Bottom</option>
+                    </select>
                 </label>
                 <br />
                 <label>Text Color: {textColor}</label>

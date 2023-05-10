@@ -14,7 +14,6 @@ describe("GET /memes", () => {
             url: "http://example.com/mock-meme.jpg",
         };
         const mockResponse = { data: mockMeme };
-        console.log("In spec-memes");
         // Mock the response from the /bucket endpoint
         axios.post.mockResolvedValue(mockResponse);
 
@@ -51,7 +50,6 @@ describe("GET /memesall", () => {
             { name: "Mock Meme 1", url: "http://example.com/mock-meme-1.jpg" },
             { name: "Mock Meme 2", url: "http://example.com/mock-meme-2.jpg" },
         ];
-        console.log("In spec-memesall");
         // Mock the response from the /bucket endpoint
 
         // Mock the query result from the database

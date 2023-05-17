@@ -4,6 +4,7 @@ const dbConn = require("../dbconnect.js");
 const router = express.Router();
 
 router.get("/quotes", async (req, res) => {
+    // Gets all quotes and then selects a random one to send to the frontend
     try {
         dbConn.then((conn) => {
             console.log(
@@ -20,6 +21,7 @@ router.get("/quotes", async (req, res) => {
     }
 });
 router.get("/quotesall", async (req, res) => {
+    // Gets all memes
     try {
         dbConn.then((conn) => {
             console.log(

@@ -3,7 +3,7 @@ var app = express();
 const router = express.Router();
 
 router.get("/health", (req, res) => {
-    // res.sendStatus(200).send("This is your daily health check");
+    //Endpoint to check status of the API
     res.send("This is your daily health check");
 });
 module.exports = router;

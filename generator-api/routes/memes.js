@@ -4,15 +4,17 @@ const dbConn = require("../dbconnect.js");
 const router = express.Router();
 
 router.get("/memes", async (req, res) => {
+    // Endpoint gets all the ememes and chooses a random meme
     try {
         dbConn.then((conn) => {
             conn.query("SELECT * FROM memes").then(async (rows) => {
                 let randVal = Math.floor(Math.random() * rows.length);
+                randVal + 1;
+                //Gets signed url from the S3 Bucket
                 let response = await axios.post(
                     "http://localhost:5555/bucket",
                     (data = { name: `${rows[randVal]["name"]}` })
                 );
-                // console.log(response);
                 conn.release();
                 res.send({ image: response.data });
             });
@@ -24,6 +26,7 @@ router.get("/memes", async (req, res) => {
 });
 
 router.get("/memesall", async (req, res) => {
+    // Endpoint gets all memes from the DB
     try {
         dbConn.then((conn) => {
             conn.query("SELECT * FROM memes").then(async (rows) => {

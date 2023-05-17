@@ -1,3 +1,4 @@
+// Setting database connection for the app
 const mariadb = require("mariadb");
 const pool = mariadb.createPool({
     host: process.env.HOST, // Replace with your MariaDB server host

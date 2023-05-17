@@ -47,10 +47,8 @@ router.get("/buckets", async (req, res) => {
     };
     s3.listObjectsV2(params, function (err, data) {
         if (err) {
-            console.log(err, err.stack);
             res.sendStatus(500);
         } else {
-            console.log(data.Contents);
             res.send("Success");
         }
     });

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./AllMemes.css";
 let loaded = false;
+// Gets all memes from the database and puts them into cards that the user can view
 const AllMemes = () => {
     const [imageArray, setImageArray] = useState([]);
     const load = async () => {

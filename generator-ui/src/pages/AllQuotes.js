@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./AllQuotes.css";
 let loader = false;
-
+// Gathers all the quotes from the database and lists them in cards
 function AllQuotes() {
     const [quotes, setQuotes] = useState([]);
 

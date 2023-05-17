@@ -17,7 +17,7 @@ function CanvasPage() {
     const canvasRef = useRef(null);
     const [fontFamily, setFontFamily] = useState("Arial");
     const [textHeight, setTextHeight] = useState("20");
-
+    // Updates the image property on a user change
     function handleImageChange(event) {
         const file = event.target.files[0];
         const reader = new FileReader();
@@ -27,14 +27,17 @@ function CanvasPage() {
         };
         reader.readAsDataURL(file);
     }
+    // Updates the text property on a user change
     function handleTextChange(event) {
         setText(event.target.value);
         drawCanvas();
     }
+    // Downloads the canvas
     function handleDownloadChange(event) {
         setDownload(event.target.value);
         drawCanvas();
     }
+    // Moves the text and rerenders the canvas
     function handleTextPositionChange(event) {
         setTextPosition({
             ...textPosition,
@@ -42,22 +45,27 @@ function CanvasPage() {
         });
         drawCanvas();
     }
+    // Changes the color and redraws canvas
     function handleTextColorChange(event) {
         setTextColor(event.target.value);
         drawCanvas();
     }
+    // Font family and redraws
     function handleFontFamilyChange(event) {
         setFontFamily(event.target.value);
         drawCanvas();
     }
+    // Text Y position handled here
     function handleTextHeight(event) {
         setTextHeight(event.target.value);
         drawCanvas();
     }
+    //Font size
     function handleTextSizeChange(event) {
         setTextSize(parseInt(event.target.value));
         drawCanvas();
     }
+    // Gets image to draw on Canvas
     async function handleFetchImage() {
         const response = await fetch("/memes");
         const data = await response.json();
@@ -66,7 +74,7 @@ function CanvasPage() {
         FileWhere = true;
         await setImageSrc(test);
     }
-
+    // Getting a base 64 string
     async function getBase64(url) {
         return await axios
             .get(url, {
@@ -79,7 +87,7 @@ function CanvasPage() {
                 localStorage.setItem("image", img);
             });
     }
-
+    // Gets preloaded data from API
     async function handleFetchText() {
         textPosition.y = 20;
         const response = await fetch("/quotes");
@@ -87,7 +95,7 @@ function CanvasPage() {
         let quote = data["quoteContent"];
         setText(quote);
     }
-
+    // Exports the meme
     function handleExportClick() {
         const canvas = canvasRef.current;
         const link = document.createElement("a");
@@ -102,7 +110,7 @@ function CanvasPage() {
             link.click();
         }
     }
-
+    // Configuring word break for the quotes from the DB
     function renderWordBreak(ctx) {
         let words = text.split(" ");
         let newString = "";
@@ -123,7 +131,7 @@ function CanvasPage() {
         ctx.fillText(newString, textPosition.x, pos);
         pos = Number(textHeight);
     }
-
+    // Draws the actual canvas and renders the different components
     function drawCanvas() {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext("2d");
@@ -140,7 +148,7 @@ function CanvasPage() {
             image.src = imageSrc;
         }
     }
-
+    // Creating all the needed html
     return (
         <div className="grid-container">
             <div className="input-container">

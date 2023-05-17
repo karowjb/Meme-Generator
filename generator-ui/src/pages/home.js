@@ -4,7 +4,7 @@ import Header from "../components/Header.js";
 import App from "../App.js";
 import AllQuotes from "./AllQuotes.js";
 import NavBar from "../components/NavBar.js";
-
+// Rendering the different parts of the UI
 function Home() {
     return (
         <Router>
